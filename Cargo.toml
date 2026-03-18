@@ -1,0 +1,13 @@
+[package]
+name = "time-series-tensor"
+version = "0.1.0"
+edition = "2021"
+authors = ["Yabloko Labs"]
+license = "Apache-2.0"
+description = "Quantum-inspired time series decomposition using tensor networks in Rust"
+repository = "https://github.com/yablokolabs/time_series_tensor"
+
+[dependencies]
+ndarray = "0.16"
+rand = "0.8"
+plotters = "0.3"
