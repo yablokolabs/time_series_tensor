@@ -65,8 +65,6 @@ time_series_tensor/
 | `reconstruct_length` | Reconstruction preserves length |
 | `listZero_length` | Zero list has expected length |
 
-**No `sorry`** — all proofs are complete.
-
 ## What is Implemented (Rust)
 
 - Synthetic time series generation (linear trend + weekly seasonality + noise)
