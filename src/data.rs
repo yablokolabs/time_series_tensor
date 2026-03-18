@@ -1,11 +1,35 @@
 use ndarray::Array1;
 use rand::Rng;
+use std::fs;
+use std::path::Path;
 
 /// Ground-truth components for validation.
 pub struct GroundTruth {
     pub trend: Array1<f64>,
     pub seasonality: Array1<f64>,
     pub noise: Array1<f64>,
+}
+
+/// Load a time series from a CSV file with columns: date/timestamp, close.
+/// Returns the close prices as an Array1.
+pub fn load_csv(path: &Path) -> Result<(Vec<String>, Array1<f64>), Box<dyn std::error::Error>> {
+    let content = fs::read_to_string(path)?;
+    let mut dates = Vec::new();
+    let mut prices = Vec::new();
+
+    for (i, line) in content.lines().enumerate() {
+        if i == 0 {
+            continue; // skip header
+        }
+        let parts: Vec<&str> = line.split(',').collect();
+        if parts.len() >= 2 {
+            dates.push(parts[0].to_string());
+            prices.push(parts[1].parse::<f64>()?);
+        }
+    }
+
+    let array = Array1::from_vec(prices);
+    Ok((dates, array))
 }
 
 /// Generate a synthetic time series: y = trend + seasonality + noise.
