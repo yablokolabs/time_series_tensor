@@ -250,3 +250,31 @@ pub fn singular_value_spectrum(series: &Array1<f64>, window_size: usize) -> Vec<
 
     sigma.iter().map(|s| 100.0 * s * s / total_energy).collect()
 }
+
+// ============================================================================
+// Invariant helpers — used by tests and bridge documentation
+// ============================================================================
+
+/// Compute the residual: original - approximation.
+pub fn residual(original: &Array1<f64>, approximation: &Array1<f64>) -> Array1<f64> {
+    original - approximation
+}
+
+/// Compute reconstruction from decomposed components: trend + seasonality + noise.
+pub fn reconstruct(decomp: &TensorDecomposition) -> Array1<f64> {
+    &decomp.trend + &decomp.seasonality + &decomp.noise
+}
+
+/// Compute the L2 error norm between original and approximation.
+///
+/// error_norm(a, b) = sqrt(sum((a - b)^2) / n)
+/// This is always ≥ 0.
+pub fn error_norm(original: &Array1<f64>, approximation: &Array1<f64>) -> f64 {
+    let diff = original - approximation;
+    (diff.mapv(|x| x * x).mean().unwrap_or(0.0)).sqrt()
+}
+
+/// Compute the approximation (trend + seasonality) without noise.
+pub fn approximation(decomp: &TensorDecomposition) -> Array1<f64> {
+    &decomp.trend + &decomp.seasonality
+}
